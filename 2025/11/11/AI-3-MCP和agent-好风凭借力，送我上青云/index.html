@@ -1,0 +1,190 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>AI-3-MCP和agent-好风凭借力，送我上青云 | By的Blog</title><meta name="author" content="Certain By"><meta name="copyright" content="Certain By"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1.认识agent在了解agent这个概念之前我们得先了解一下LLM,LLM很简单就是大语言模型,而agent则是把LLM和tool结合在一起,让一个只会说话的LLM也能和人一样所以各种工具,比如查询天气,翻阅文件等等.那么LLM是如何理解并调用tool的呢,人们给出的方案是在prompt之前再加一个system prompt(简单粗暴). 12345678910111213141516def f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI-3-MCP和agent-好风凭借力，送我上青云">
+<meta property="og:url" content="https://certainby.github.io/2025/11/11/AI-3-MCP%E5%92%8Cagent-%E5%A5%BD%E9%A3%8E%E5%87%AD%E5%80%9F%E5%8A%9B%EF%BC%8C%E9%80%81%E6%88%91%E4%B8%8A%E9%9D%92%E4%BA%91/index.html">
+<meta property="og:site_name" content="By的Blog">
+<meta property="og:description" content="1.认识agent在了解agent这个概念之前我们得先了解一下LLM,LLM很简单就是大语言模型,而agent则是把LLM和tool结合在一起,让一个只会说话的LLM也能和人一样所以各种工具,比如查询天气,翻阅文件等等.那么LLM是如何理解并调用tool的呢,人们给出的方案是在prompt之前再加一个system prompt(简单粗暴). 12345678910111213141516def f">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/CertainBy/blog-imgs/refs/heads/master/Haruka.png">
+<meta property="article:published_time" content="2025-11-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-11-14T16:00:00.000Z">
+<meta property="article:author" content="Certain By">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/CertainBy/blog-imgs/refs/heads/master/Haruka.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "AI-3-MCP和agent-好风凭借力，送我上青云",
+  "url": "https://certainby.github.io/2025/11/11/AI-3-MCP%E5%92%8Cagent-%E5%A5%BD%E9%A3%8E%E5%87%AD%E5%80%9F%E5%8A%9B%EF%BC%8C%E9%80%81%E6%88%91%E4%B8%8A%E9%9D%92%E4%BA%91/",
+  "image": "https://raw.githubusercontent.com/CertainBy/blog-imgs/refs/heads/master/Haruka.png",
+  "datePublished": "2025-11-10T16:00:00.000Z",
+  "dateModified": "2025-11-14T16:00:00.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Certain By",
+      "url": "https://certainby.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://certainby.github.io/2025/11/11/AI-3-MCP%E5%92%8Cagent-%E5%A5%BD%E9%A3%8E%E5%87%AD%E5%80%9F%E5%8A%9B%EF%BC%8C%E9%80%81%E6%88%91%E4%B8%8A%E9%9D%92%E4%BA%91/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="manifest" href="/null"/><link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.ico"/><link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.ico"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'AI-3-MCP和agent-好风凭借力，送我上青云',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.0"></head><body><div id="web_bg" style="background-image: url(/url(https:/raw.githubusercontent.com/CertainBy/blog-imgs/refs/heads/master/Haruka.jpg));"></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://raw.githubusercontent.com/CertainBy/blog-imgs/refs/heads/master/Haruka.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">By的Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">AI-3-MCP和agent-好风凭借力，送我上青云</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">AI-3-MCP和agent-好风凭借力，送我上青云</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-10T16:00:00.000Z" title="发表于 2025-11-11 00:00:00">2025-11-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-11-14T16:00:00.000Z" title="更新于 2025-11-15 00:00:00">2025-11-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/The-road-to-AIcoding/">The road to AIcoding</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="1-认识agent"><a href="#1-认识agent" class="headerlink" title="1.认识agent"></a>1.认识agent</h1><p>在了解agent这个概念之前我们得先了解一下LLM,LLM很简单就是大语言模型,而agent则是把LLM和tool结合在一起,让一个只会说话的LLM也能和人一样所以各种工具,比如查询天气,翻阅文件等等.<br>那么LLM是如何理解并调用tool的呢,人们给出的方案是在prompt之前再加一个system prompt(简单粗暴).</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">file_processor</span>(<span class="params">file_path: <span class="built_in">str</span>, operation: <span class="built_in">str</span> = <span class="string">&quot;count_lines&quot;</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    处理文本文件的基本操作</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        file_path: 要处理的文件路径</span></span><br><span class="line"><span class="string">        operation: 执行的操作类型，可选值：</span></span><br><span class="line"><span class="string">                  - &quot;count_lines&quot;: 统计行数</span></span><br><span class="line"><span class="string">                  - &quot;count_words&quot;: 统计单词数</span></span><br><span class="line"><span class="string">                  - &quot;count_chars&quot;: 统计字符数</span></span><br><span class="line"><span class="string">                  - &quot;preview&quot;: 文件预览（前10行）</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        处理结果的字符串描述</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-MCP"><a href="#2-MCP" class="headerlink" title="2.MCP"></a>2.MCP</h1><p><a target="_blank" rel="noopener" href="https://mcp-docs.cn/introduction">MCP 中文文档</a><br>在agent这个概念出现之后,因为tools的层出不穷,每个工具的prompt也不一样,因此MCP出现了,旨在<br><code>MCP 是一个开放协议，它为应用程序向 LLM 提供上下文的方式进行了标准化</code></p>
+<h1 id="3-简单尝试"><a href="#3-简单尝试" class="headerlink" title="3.简单尝试"></a>3.简单尝试</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/1907220845841069807">实战教程来了！从零开始打造MCP+Ollama集成</a><br>这是我在知乎上找到的简单教程<br>基本上大体框架是按照他给的复制的(我写不出来)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">folder</span><br><span class="line">├── server.py</span><br><span class="line">└── client.py</span><br></pre></td></tr></table></figure>
+<p>为了更好地理解如何使用,我编写了一个mcp tool用来查阅文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@mcp.tool()</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">file_processor</span>(<span class="params">file_path: <span class="built_in">str</span>, operation: <span class="built_in">str</span> = <span class="string">&quot;count_lines&quot;</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    处理文本文件的基本操作</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        file_path: 要处理的文件路径</span></span><br><span class="line"><span class="string">        operation: 执行的操作类型，可选值：</span></span><br><span class="line"><span class="string">                  - &quot;count_lines&quot;: 统计行数</span></span><br><span class="line"><span class="string">                  - &quot;count_words&quot;: 统计单词数</span></span><br><span class="line"><span class="string">                  - &quot;count_chars&quot;: 统计字符数</span></span><br><span class="line"><span class="string">                  - &quot;preview&quot;: 文件预览（前10行）</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        处理结果的字符串描述</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&#x27;r&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">            content = file.read()</span><br><span class="line">            lines = content.split(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> operation == <span class="string">&quot;count_lines&quot;</span>:</span><br><span class="line">            result = <span class="string">f&quot;文件 &#x27;<span class="subst">&#123;file_path&#125;</span>&#x27; 共有 <span class="subst">&#123;<span class="built_in">len</span>(lines)&#125;</span> 行&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">elif</span> operation == <span class="string">&quot;count_words&quot;</span>:</span><br><span class="line">            word_count = <span class="built_in">len</span>(content.split())</span><br><span class="line">            result = <span class="string">f&quot;文件 &#x27;<span class="subst">&#123;file_path&#125;</span>&#x27; 共有 <span class="subst">&#123;word_count&#125;</span> 个单词&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">elif</span> operation == <span class="string">&quot;count_chars&quot;</span>:</span><br><span class="line">            char_count = <span class="built_in">len</span>(content)</span><br><span class="line">            result = <span class="string">f&quot;文件 &#x27;<span class="subst">&#123;file_path&#125;</span>&#x27; 共有 <span class="subst">&#123;char_count&#125;</span> 个字符&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">elif</span> operation == <span class="string">&quot;preview&quot;</span>:</span><br><span class="line">            preview_lines = lines[:<span class="number">10</span>]</span><br><span class="line">            preview_content = <span class="string">&#x27;\n&#x27;</span>.join(preview_lines)</span><br><span class="line">            result = <span class="string">f&quot;文件 &#x27;<span class="subst">&#123;file_path&#125;</span>&#x27; 前10行预览：\n<span class="subst">&#123;preview_content&#125;</span>&quot;</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(lines) &gt; <span class="number">10</span>:</span><br><span class="line">                result += <span class="string">f&quot;\n...（还有 <span class="subst">&#123;<span class="built_in">len</span>(lines) - <span class="number">10</span>&#125;</span> 行）&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            result = <span class="string">f&quot;未知操作: <span class="subst">&#123;operation&#125;</span>，请使用: count_lines, count_words, count_chars, preview&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">except</span> FileNotFoundError:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;错误：文件 &#x27;<span class="subst">&#123;file_path&#125;</span>&#x27; 未找到&quot;</span></span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;处理文件时出错: <span class="subst">&#123;<span class="built_in">str</span>(e)&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<p>更改一下作者提供的message</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">messages=[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;role&quot;</span>: <span class="string">&quot;system&quot;</span>,</span><br><span class="line">        <span class="string">&quot;content&quot;</span>: <span class="string">&quot;你是一个听话的助手，上下文中有一系列工具。&quot;</span></span><br><span class="line">                <span class="string">&quot;你的任务是满足我的各种要求。不要自己生成函数结果。&quot;</span></span><br><span class="line">                <span class="string">&quot;简洁地回复一条简短消息，提及调用函数，但不提供函数输出本身。&quot;</span></span><br><span class="line">                <span class="string">&quot;将该简短消息放在&#x27;response&#x27;属性中。调用函数时的operation请从上下文的工具参数中选取，不要自己翻译出参数。&quot;</span></span><br><span class="line">                <span class="string">&quot;例如：&#x27;好的，我会运行magicoutput函数并返回输出。&#x27;同时用正确的参数填充&#x27;tool&#x27;属性。&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, </span><br><span class="line">        <span class="string">&quot;content&quot;</span>: <span class="string">&quot;请使用文件处理工具统计文件 E:/workspace/OllamaMCP/testtext.txt 的行数&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>难点就在于如何修改这个message让AI能够正确地理解你的意思然后调用函数,这个只能多去试<br><img src="https://raw.githubusercontent.com/CertainBy/blog-imgs/master/%E5%B0%9D%E8%AF%95%E8%BF%90%E8%A1%8Cmcptool.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://certainby.github.io">Certain By</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://certainby.github.io/2025/11/11/AI-3-MCP%E5%92%8Cagent-%E5%A5%BD%E9%A3%8E%E5%87%AD%E5%80%9F%E5%8A%9B%EF%BC%8C%E9%80%81%E6%88%91%E4%B8%8A%E9%9D%92%E4%BA%91/">https://certainby.github.io/2025/11/11/AI-3-MCP%E5%92%8Cagent-%E5%A5%BD%E9%A3%8E%E5%87%AD%E5%80%9F%E5%8A%9B%EF%BC%8C%E9%80%81%E6%88%91%E4%B8%8A%E9%9D%92%E4%BA%91/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://certainby.github.io" target="_blank">By的Blog</a>！</span></div></div><div class="tag_share"></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://raw.githubusercontent.com/CertainBy/blog-imgs/refs/heads/master/Haruka.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Certain By</div><div class="author-info-description">一个没有时间娱乐的人,迟早会有时间生病</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/CertainBy"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客,祝你好梦</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E8%AE%A4%E8%AF%86agent"><span class="toc-text">1.认识agent</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-MCP"><span class="toc-text">2.MCP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E7%AE%80%E5%8D%95%E5%B0%9D%E8%AF%95"><span class="toc-text">3.简单尝试</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/11/AI-3-MCP%E5%92%8Cagent-%E5%A5%BD%E9%A3%8E%E5%87%AD%E5%80%9F%E5%8A%9B%EF%BC%8C%E9%80%81%E6%88%91%E4%B8%8A%E9%9D%92%E4%BA%91/" title="AI-3-MCP和agent-好风凭借力，送我上青云">AI-3-MCP和agent-好风凭借力，送我上青云</a><time datetime="2025-11-14T16:00:00.000Z" title="更新于 2025-11-15 00:00:00">2025-11-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/29/AI-2-%E5%88%9D%E8%AF%86AI-%E7%9B%B4%E5%BA%94%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80%E6%89%8B%EF%BC%8C%E9%B9%93%E9%B9%AD%E7%BB%88%E5%BD%92%E7%8E%89%E7%AC%8B%E7%8F%AD/" title="AI-2-初识AI-直应小试牛刀手，鹓鹭终归玉笋班">AI-2-初识AI-直应小试牛刀手，鹓鹭终归玉笋班</a><time datetime="2025-11-02T16:00:00.000Z" title="更新于 2025-11-03 00:00:00">2025-11-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/05/FE-1.HTML%E4%B8%8ECSS%E5%9F%BA%E7%A1%80/" title="FE-1.HTML与CSS基础">FE-1.HTML与CSS基础</a><time datetime="2025-10-31T16:00:00.000Z" title="更新于 2025-11-01 00:00:00">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/30/FE-0.%E9%A2%84%E4%B9%A0%E4%BD%9C%E4%B8%9A/" title="FE-0.预习作业">FE-0.预习作业</a><time datetime="2025-10-29T16:00:00.000Z" title="更新于 2025-10-30 00:00:00">2025-10-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/26/SRE-1.%E7%86%9F%E6%82%89%E7%8E%AF%E5%A2%83/" title="SRE-1.熟悉环境">SRE-1.熟悉环境</a><time datetime="2025-10-27T16:00:00.000Z" title="更新于 2025-10-28 00:00:00">2025-10-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Certain By</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
